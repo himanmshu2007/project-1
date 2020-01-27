@@ -1,0 +1,65 @@
+	#Himanshu Maheshwari
+  #Project 1
+	
+	#1a.
+	#Created density plot graph and colored it light blue
+	library('ggplot2')
+	iris = iris
+	head(iris)
+	p = ggplot(data=iris, aes(x=Petal.Length))
+	p + geom_density(fill = 'light blue')
+	
+	#1b.
+	#Created a title cell
+	
+	#1c.
+	#Jupyter can export into Notebook, R, HTML, Markdown, reST, LaTeX, and PDF
+	
+	
+	
+	
+	#2a.
+	#Read 5000_transactions as and stored it into myDF
+	myDF = read.csv('/home/tnyquist/5000_transactions.csv')
+	
+	#2b.
+	#Split the STORE_R variable into myresults
+	myresults = split(myDF, myDF$STORE_R)
+	
+	#2c.
+	#class = list ; length = 4 ; names = "CENTRAL" "EAST" "SOUTH" "WEST"
+	class(myresults) ; length(myresults) ; names(myresults)
+	
+	#2d.
+	#dimensions = 2463343 9 ; head = table was formed, all of them had CENTRAL
+	dim(myresults[["CENTRAL"]]) ; head(myresults[["CENTRAL"]])
+	
+	#2e.
+	#Copied all rows contraining "CENTRAL" in column "STORE_R"
+	centralresults = myDF[myDF$STORE_R == "CENTRAL",]
+	
+	#3a.
+	#Read csv file into dataframe loans
+	loans = read.csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-11-26/loans.csv')
+	
+	#3b.
+	#Created sloans using given parameters and the subset function
+	sloans = subset(loans, total>=1000000, select = c(agency_name, year, voluntary_payments, wage_garnishments))
+	
+	#3c.
+	#wage_garnishments min = 1323.18 ; voluntary_payments min = 75046.88
+	min(sloans$wage_garnishments) ; min(sloans$voluntary_payments)
+	
+	#3d.
+	#created and added ratio_forced to sloans ; most = Financial Asset Managment ; least = Pioneer
+	ratio_forced = sloans$wage_garnishments/sloans$voluntary_payments
+	sloans['ratio_forced'] = ratio_forced
+	sort(tapply(sloans$ratio_forced, sloans$agency_name, max))
+	sort(tapply(sloans$ratio_forced, sloans$agency_name, min))
+	
+	#3e.
+	#Created a pie chart
+	sum = sum(sloans$wage_garnishments) + sum(sloans$voluntary_payments)
+	x = c(sum(sloans$wage_garnishments)/sum, sum(sloans$voluntary_payments)/sum)
+	lables = c("wage garnishments", "voluntary payments")
+	pie(x, lables, col = rainbow(length(x)))
